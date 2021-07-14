@@ -1,0 +1,16 @@
+[
+{
+  "modid": "better_creative_items",
+  "name": "Better creative items",
+  "description": "Creative items for testing and stuff",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["FloweyTF"],
+  "credits": "The authors",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
