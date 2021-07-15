@@ -2,7 +2,7 @@ package com.floweytf.bettercreativeitems;
 
 import net.minecraftforge.common.config.Config;
 
-@Config(modid = ModMain.MODID)
+@Config(modid = Constants.MOD_ID)
 public class ModConfig {
     public static Energy energy = new Energy();
 

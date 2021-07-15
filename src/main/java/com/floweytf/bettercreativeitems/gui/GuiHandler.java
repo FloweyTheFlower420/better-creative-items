@@ -1,6 +1,6 @@
 package com.floweytf.bettercreativeitems.gui;
 
-import com.floweytf.bettercreativeitems.ModMain;
+import static com.floweytf.bettercreativeitems.Constants.*;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +12,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        if(ID == ModMain.GUI_ID_FLUID)
+        if(ID == GUI_ID_FLUID)
             return new FluidContainer();
         return null;
     }
@@ -20,7 +20,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        if(ID == ModMain.GUI_ID_FLUID)
+        if(ID == GUI_ID_FLUID)
             return new FluidGui((FluidTileEntity) world.getTileEntity(new BlockPos(x,y,z)));
         return null;
     }

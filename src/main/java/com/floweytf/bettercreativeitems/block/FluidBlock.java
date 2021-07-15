@@ -1,7 +1,7 @@
 package com.floweytf.bettercreativeitems.block;
 
+import static com.floweytf.bettercreativeitems.Constants.*;
 import com.floweytf.bettercreativeitems.ModMain;
-import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -10,7 +10,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -19,11 +18,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("NullableProblems")
 public class FluidBlock extends BlockContainer {
     public FluidBlock() {
         super(Material.BARRIER);
-        setRegistryName(ModMain.id("fluid"));
-        setUnlocalizedName(ModMain.MODID + "." + "fluid");
+        setRegistryName(id("fluid"));
+        setUnlocalizedName(MOD_ID + "." + "fluid");
         setCreativeTab(CreativeTabs.MISC);
         ModMain.proxy.registerModel(Item.getItemFromBlock(this), 0);
     }
@@ -33,9 +33,11 @@ public class FluidBlock extends BlockContainer {
         return true;
     }
 
+    @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         return new FluidTileEntity();
     }
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY)
     {
@@ -47,7 +49,7 @@ public class FluidBlock extends BlockContainer {
         if (worldIn.isRemote)
             return true;
 
-        playerIn.openGui(ModMain.instance, ModMain.GUI_ID_FLUID, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        playerIn.openGui(ModMain.instance, GUI_ID_FLUID, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
         return true;
     }
@@ -67,5 +69,4 @@ public class FluidBlock extends BlockContainer {
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
-
 }

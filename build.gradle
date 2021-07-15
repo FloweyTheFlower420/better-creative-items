@@ -20,7 +20,7 @@ apply plugin: 'maven-publish'
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = '0.1.4'
+version = '0.2.2-debug-2'
 group = 'com.floweytf.bettercreativeitems' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'bettercreativeitems'
 
@@ -64,6 +64,7 @@ minecraft {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
 }
 

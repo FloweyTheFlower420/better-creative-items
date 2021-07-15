@@ -1,26 +1,33 @@
 package com.floweytf.bettercreativeitems.tileentity;
 
-import com.floweytf.bettercreativeitems.ModMain;
+import static com.floweytf.bettercreativeitems.Constants.*;
+
 import com.floweytf.bettercreativeitems.caps.CreativeFluidHandler;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("NullableProblems")
 public class FluidTileEntity extends TileEntity implements IInteractionObject {
-    final CreativeFluidHandler cap = new CreativeFluidHandler();
+    private static final String TRANSLATION_KEY = translationKey("container", "fluid", "name");
+    private static final String GUI_ID = id(NBT_TAG_NAME).toString();
+
+    private final CreativeFluidHandler cap = new CreativeFluidHandler();
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
@@ -41,13 +48,13 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        cap.fluid = FluidRegistry.getFluid(compound.getString("fluid"));
+        setFluid(compound.getString(NBT_TAG_NAME));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setString("fluid", cap.fluid == null ? emptyFluid() : FluidRegistry.getFluidName(cap.fluid));
+        compound.setString(NBT_TAG_NAME, getFluidID());
         return compound;
     }
 
@@ -58,12 +65,12 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
 
     @Override
     public String getGuiID() {
-        return ModMain.id("fluid").toString();
+        return GUI_ID;
     }
 
     @Override
     public String getName() {
-        return "container.better_creative_items.fluid.name";
+        return TRANSLATION_KEY;
     }
 
     @Override
@@ -77,10 +84,51 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     }
 
     public void setFluid(String id) {
+        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
         cap.fluid = FluidRegistry.getFluid(id);
     }
 
+    public Fluid getFluid() {
+        return cap.fluid;
+    }
+
+    public String getFluidID() {
+        if(cap.fluid == null)
+            return emptyFluid();
+        return FluidRegistry.getFluidName(cap.fluid);
+    }
+
     public static String emptyFluid() {
-        return ModMain.id("empty").toString();
+        return FLUID_ID_EMPTY;
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound tag = super.getUpdateTag();
+        tag.setString(NBT_TAG_NAME, getFluidID());
+        return tag;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        SPacketUpdateTileEntity packet = super.getUpdatePacket();
+        if(packet == null)
+            packet = new SPacketUpdateTileEntity(pos, 1, new NBTTagCompound());
+        packet.getNbtCompound().setString(NBT_TAG_NAME, getFluidID());
+        return packet;
+    }
+
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        super.onDataPacket(net, pkt);
+        setFluid(pkt.getNbtCompound().getString(NBT_TAG_NAME));
+    }
+
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        super.handleUpdateTag(tag);
+        setFluid(tag.getString(NBT_TAG_NAME));
     }
 }

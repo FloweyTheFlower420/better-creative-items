@@ -3,7 +3,6 @@ package com.floweytf.bettercreativeitems.network;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

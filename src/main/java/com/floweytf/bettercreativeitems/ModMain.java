@@ -1,10 +1,12 @@
 package com.floweytf.bettercreativeitems;
+
 import com.floweytf.bettercreativeitems.gui.GuiHandler;
+import com.floweytf.bettercreativeitems.network.PacketHandler;
 import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -12,11 +14,13 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 
-@Mod(modid = ModMain.MODID, name = ModMain.NAME, version = ModMain.VERSION)
+import static com.floweytf.bettercreativeitems.Constants.*;
+
+@Mod(modid = Constants.MOD_ID, name = Constants.NAME, version = Constants.VERSION)
 public class ModMain {
     @SidedProxy(clientSide = "com.floweytf.bettercreativeitems.CommonProxy",
         serverSide = "com.floweytf.bettercreativeitems.CommonProxy")
@@ -24,18 +28,21 @@ public class ModMain {
 
     @Mod.Instance
     public static ModMain instance;
-
-    public static final String MODID = "better_creative_items";
-    public static final String NAME = "Better Creative Items";
-    public static final String VERSION = "1.0";
-    public static final ArrayList<Fluid> FLUIDS = new ArrayList<>();
-
-    public static final int GUI_ID_FLUID = 1;
+    public static Logger LOG;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        GameRegistry.registerTileEntity(EnergyTileEntity.class, id("energy_tile_entity"));
-        GameRegistry.registerTileEntity(FluidTileEntity.class, id("fluid_tile_entity"));
+        LOG = event.getModLog();
+        GameRegistry.registerTileEntity(EnergyTileEntity.class, Constants.id("energy_tile_entity"));
+        GameRegistry.registerTileEntity(FluidTileEntity.class, Constants.id("fluid_tile_entity"));
+        PacketHandler.register();
+        for(int i = 0; i < 100; i++ ) {
+            FluidRegistry.addBucketForFluid(
+                new Fluid(id("test_" + i).toString(),
+                    id("test_" + i),
+                    id("test" + i)
+                ));
+        }
     }
 
     @Mod.EventHandler
@@ -44,14 +51,9 @@ public class ModMain {
     }
 
     @Mod.EventHandler
-    public void posInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {
         FLUIDS.addAll(FluidRegistry.getRegisteredFluids().values());
-        // STACK ISN'T EVEN USED???? Are forge devs high?!
-        FLUIDS.sort(Comparator.comparing(v -> v.getLocalizedName(null)));
-    }
-
-
-    public static ResourceLocation id(String name) {
-        return new ResourceLocation(MODID, name);
+        FLUIDS.sort(Comparator.comparing(v -> v.getLocalizedName(new FluidStack(v, 1))));
+        LOG.info("Scanning fluids done, with " + FLUIDS.size() + " fluids found!");
     }
 }
