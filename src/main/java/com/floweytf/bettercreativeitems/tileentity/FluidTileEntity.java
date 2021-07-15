@@ -9,6 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IInteractionObject;
@@ -46,7 +47,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setString("fluid", cap.fluid == null ? "better_creative_items:empty" : FluidRegistry.getFluidName(cap.fluid));
+        compound.setString("fluid", cap.fluid == null ? emptyFluid() : FluidRegistry.getFluidName(cap.fluid));
         return compound;
     }
 
@@ -73,5 +74,13 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public boolean hasCustomName() {
         return false;
+    }
+
+    public void setFluid(String id) {
+        cap.fluid = FluidRegistry.getFluid(id);
+    }
+
+    public static String emptyFluid() {
+        return ModMain.id("empty").toString();
     }
 }

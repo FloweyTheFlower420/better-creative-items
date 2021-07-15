@@ -3,3 +3,4 @@ language.region=US
 language.code=en_US
 
 tile.better_creative_items.energy.name="Creative Energy Provider"
+tile.better_creative_items.fluid.name="Creative Fluid Provider"
