@@ -7,6 +7,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+/**
+ * Base block, handles: registry ID, naming, creative tab, model register
+ */
 public class BlockBase extends Block {
     public BlockBase(Material materialIn, String id) {
         super(materialIn);

@@ -5,6 +5,11 @@ import net.minecraftforge.common.config.Config;
 @Config(modid = Constants.MOD_ID)
 public class ModConfig {
     public static Energy energy = new Energy();
+    @Config.Comment({
+        "Do **NOT** touch unless you know what you are doing!",
+        "Doing so will cause the mod to register fluids for testing"}
+    )
+    public static boolean registerDebugFluids = false;
 
     public static class Energy {
         @Config.Comment("Creative energy export cycles")

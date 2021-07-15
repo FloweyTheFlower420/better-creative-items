@@ -2,7 +2,7 @@ package com.floweytf.bettercreativeitems.tileentity;
 
 import static com.floweytf.bettercreativeitems.Constants.*;
 
-import com.floweytf.bettercreativeitems.caps.CreativeFluidHandler;
+import com.floweytf.bettercreativeitems.capabilities.CreativeFluidHandler;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,6 +20,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
@@ -31,7 +32,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return true;
         return super.hasCapability(capability, facing);
     }
@@ -39,7 +40,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return (T) cap; // ur capping
 
         return super.getCapability(capability, facing);
@@ -74,6 +75,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     }
 
     @Override
+    @Nonnull
     public ITextComponent getDisplayName() {
         return new TextComponentTranslation(getName());
     }
@@ -93,7 +95,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     }
 
     public String getFluidID() {
-        if(cap.fluid == null)
+        if (cap.fluid == null)
             return emptyFluid();
         return FluidRegistry.getFluidName(cap.fluid);
     }
@@ -113,7 +115,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         SPacketUpdateTileEntity packet = super.getUpdatePacket();
-        if(packet == null)
+        if (packet == null)
             packet = new SPacketUpdateTileEntity(pos, 1, new NBTTagCompound());
         packet.getNbtCompound().setString(NBT_TAG_NAME, getFluidID());
         return packet;

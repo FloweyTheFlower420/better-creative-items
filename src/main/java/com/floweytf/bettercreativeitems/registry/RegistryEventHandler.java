@@ -13,8 +13,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RegistryEventHandler {
     @SubscribeEvent
     public static void onRegistryItem(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new MyItemBlock(Registry.ENERGY_BLOCK,"energy"));
-        event.getRegistry().register(new MyItemBlock(Registry.FLUID_BLOCK,"fluid"));
+        event.getRegistry().register(new MyItemBlock(Registry.ENERGY_BLOCK, "energy"));
+        event.getRegistry().register(new MyItemBlock(Registry.FLUID_BLOCK, "fluid"));
     }
 
     @SubscribeEvent

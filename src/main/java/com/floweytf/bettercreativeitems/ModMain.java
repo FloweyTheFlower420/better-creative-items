@@ -4,9 +4,9 @@ import com.floweytf.bettercreativeitems.gui.GuiHandler;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
 import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -36,12 +36,11 @@ public class ModMain {
         GameRegistry.registerTileEntity(EnergyTileEntity.class, Constants.id("energy_tile_entity"));
         GameRegistry.registerTileEntity(FluidTileEntity.class, Constants.id("fluid_tile_entity"));
         PacketHandler.register();
-        for(int i = 0; i < 100; i++ ) {
-            FluidRegistry.addBucketForFluid(
-                new Fluid(id("test_" + i).toString(),
-                    id("test_" + i),
-                    id("test" + i)
-                ));
+        if (ModConfig.registerDebugFluids) {
+            for (int i = 0; i < 100; i++) {
+                ResourceLocation id = id("test_" + i);
+                FluidRegistry.addBucketForFluid(new Fluid(id.toString(), id, id));
+            }
         }
     }
 
@@ -53,7 +52,7 @@ public class ModMain {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         FLUIDS.addAll(FluidRegistry.getRegisteredFluids().values());
-        FLUIDS.sort(Comparator.comparing(v -> v.getLocalizedName(new FluidStack(v, 1))));
+        FLUIDS.sort(Comparator.comparing(Constants::getFluidName));
         LOG.info("Scanning fluids done, with " + FLUIDS.size() + " fluids found!");
     }
 }

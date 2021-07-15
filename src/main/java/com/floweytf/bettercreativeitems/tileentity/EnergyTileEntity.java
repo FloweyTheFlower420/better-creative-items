@@ -1,7 +1,7 @@
 package com.floweytf.bettercreativeitems.tileentity;
 
 import com.floweytf.bettercreativeitems.ModConfig;
-import com.floweytf.bettercreativeitems.caps.CreativeEnergyStorage;
+import com.floweytf.bettercreativeitems.capabilities.CreativeEnergyStorage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -17,21 +17,21 @@ public class EnergyTileEntity extends TileEntity implements ITickable {
 
     private void insertPower(TileEntity tileEntity) {
         IEnergyStorage cap = null;
-        for(EnumFacing facing : EnumFacing.VALUES) {
+        for (EnumFacing facing : EnumFacing.VALUES) {
             cap = tileEntity.getCapability(CapabilityEnergy.ENERGY, facing);
-            if(cap != null)
+            if (cap != null)
                 break;
         }
 
-        if(cap == null)
+        if (cap == null)
             return;
-        for(int i = 0; i < ModConfig.energy.cyclesPerTick; i++)
+        for (int i = 0; i < ModConfig.energy.cyclesPerTick; i++)
             cap.receiveEnergy(Integer.MAX_VALUE, false);
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityEnergy.ENERGY)
+        if (capability == CapabilityEnergy.ENERGY)
             return true;
         return super.hasCapability(capability, facing);
     }
@@ -39,7 +39,7 @@ public class EnergyTileEntity extends TileEntity implements ITickable {
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if(capability == CapabilityEnergy.ENERGY)
+        if (capability == CapabilityEnergy.ENERGY)
             return (T) cap; // ur capping
 
         return super.getCapability(capability, facing);
@@ -54,16 +54,16 @@ public class EnergyTileEntity extends TileEntity implements ITickable {
             pos.add(-ModConfig.energy.radius, -ModConfig.energy.radius, -ModConfig.energy.radius)
         );
         blockInBoxSet.forEach(blockPos -> {
-            if(isValidPos(blockPos)) {
+            if (isValidPos(blockPos)) {
                 TileEntity entity = world.getTileEntity(blockPos);
-                if(entity != null)
+                if (entity != null)
                     insertPower(entity);
             }
         });
     }
 
     private boolean isValidPos(BlockPos pos) {
-        if(pos.getY() < 0 && pos.getY() > 256)
+        if (pos.getY() < 0 && pos.getY() > 256)
             return false;
         return world.isBlockLoaded(pos);
     }
