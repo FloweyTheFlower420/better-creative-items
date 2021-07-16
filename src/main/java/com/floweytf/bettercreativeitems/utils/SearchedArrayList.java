@@ -43,6 +43,10 @@ public class SearchedArrayList<T> extends AbstractList<T> {
     public void appendSearchChar(char ch) {
         str += ch;
         str = str.toLowerCase();
+        if(str.length() == 1) {
+            setSearchStr(str);
+            return;
+        }
         // redo search
         List<Integer> other = new ArrayList<>();
         for (Integer location : locations) {
