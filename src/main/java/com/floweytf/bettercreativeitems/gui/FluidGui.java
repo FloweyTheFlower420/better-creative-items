@@ -128,11 +128,11 @@ public class FluidGui extends GuiContainer {
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         renderBackground();
-        renderFluids();
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        renderFluids();
         searchBar.drawTextBox();
         renderToolTips(mouseX - guiLeft, mouseY - guiTop);
     }

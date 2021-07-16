@@ -37,8 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.floweytf.bettercreativeitems.Constants.CREATIVE_TABS;
-import static com.floweytf.bettercreativeitems.Constants.ITEMS;
+import static com.floweytf.bettercreativeitems.Constants.*;
 
 // Code yoinked from MC, just w/ a small extra thing.
 @SuppressWarnings("NullableProblems")
@@ -71,17 +70,16 @@ public class ItemGui extends GuiContainer {
         type = slotId == -999 && type == ClickType.PICKUP ? ClickType.THROW : type;
 
         if (slotIn == null && type != ClickType.QUICK_CRAFT) {
-            InventoryPlayer inventoryplayer1 = this.mc.player.inventory;
+            InventoryPlayer playerInventory = this.mc.player.inventory;
 
-            if (!inventoryplayer1.getItemStack().isEmpty()) {
+            if (!playerInventory.getItemStack().isEmpty()) {
                 if (mouseButton == 0) {
-                    this.mc.player.dropItem(inventoryplayer1.getItemStack(), true);
-                    this.mc.playerController.sendPacketDropItem(inventoryplayer1.getItemStack());
-                    inventoryplayer1.setItemStack(ItemStack.EMPTY);
+                    this.mc.player.dropItem(playerInventory.getItemStack(), true);
+                    this.mc.playerController.sendPacketDropItem(playerInventory.getItemStack());
+                    playerInventory.setItemStack(ItemStack.EMPTY);
                 }
-
                 if (mouseButton == 1) {
-                    ItemStack itemstack6 = inventoryplayer1.getItemStack().splitStack(1);
+                    ItemStack itemstack6 = playerInventory.getItemStack().splitStack(1);
                     this.mc.player.dropItem(itemstack6, true);
                     this.mc.playerController.sendPacketDropItem(itemstack6);
                 }
@@ -91,15 +89,14 @@ public class ItemGui extends GuiContainer {
             if (slotIn != null && !slotIn.canTakeStack(this.mc.player)) {
                 return;
             }
-
             if (slotIn == this.destroyItemSlot && flag) {
                 for (int j = 0; j < this.mc.player.inventoryContainer.getInventory().size(); ++j) {
                     this.mc.playerController.sendSlotPacket(ItemStack.EMPTY, j);
                 }
             }
             else if (type != ClickType.QUICK_CRAFT && slotIn.inventory == basicInventory) {
-                InventoryPlayer inventoryplayer = this.mc.player.inventory;
-                ItemStack itemstack5 = inventoryplayer.getItemStack();
+                InventoryPlayer playerInventory = this.mc.player.inventory;
+                ItemStack itemstack5 = playerInventory.getItemStack();
                 ItemStack itemstack7 = slotIn.getStack();
 
                 if (type == ClickType.SWAP) {
@@ -114,10 +111,10 @@ public class ItemGui extends GuiContainer {
                 }
 
                 if (type == ClickType.CLONE) {
-                    if (inventoryplayer.getItemStack().isEmpty() && slotIn.getHasStack()) {
+                    if (playerInventory.getItemStack().isEmpty() && slotIn.getHasStack()) {
                         ItemStack itemstack9 = slotIn.getStack().copy();
                         itemstack9.setCount(itemstack9.getMaxStackSize());
-                        inventoryplayer.setItemStack(itemstack9);
+                        playerInventory.setItemStack(itemstack9);
                     }
 
                     return;
@@ -148,18 +145,18 @@ public class ItemGui extends GuiContainer {
                     }
                 }
                 else if (!itemstack7.isEmpty() && itemstack5.isEmpty()) {
-                    inventoryplayer.setItemStack(itemstack7.copy());
-                    itemstack5 = inventoryplayer.getItemStack();
+                    playerInventory.setItemStack(itemstack7.copy());
+                    itemstack5 = playerInventory.getItemStack();
 
                     if (flag) {
                         itemstack5.setCount(itemstack5.getMaxStackSize());
                     }
                 }
                 else if (mouseButton == 0) {
-                    inventoryplayer.setItemStack(ItemStack.EMPTY);
+                    playerInventory.setItemStack(ItemStack.EMPTY);
                 }
                 else {
-                    inventoryplayer.getItemStack().shrink(1);
+                    playerInventory.getItemStack().shrink(1);
                 }
             }
             else if (this.inventorySlots != null) {
@@ -201,7 +198,7 @@ public class ItemGui extends GuiContainer {
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setVisible(false);
         this.searchField.setTextColor(16777215);
-        int i = CREATIVE_TABS.length - 1;
+        int i = TAB.getTabIndex();
         selectedTabIndex = -1;
         this.setCurrentCreativeTab(CREATIVE_TABS[i]);
         this.listener = new CreativeCrafting(this.mc);
@@ -371,7 +368,7 @@ public class ItemGui extends GuiContainer {
                 }
             }
         }
-        else if (tab == CREATIVE_TABS[CREATIVE_TABS.length - 1]) {
+        else if (tab == TAB) {
             for (Item item : ITEMS) {
                 container.itemList.add(new ItemStack(item));
             }
@@ -462,11 +459,6 @@ public class ItemGui extends GuiContainer {
                 break;
             }
         }
-
-        if (!rendered && !renderCreativeInventoryHoveringText(CreativeTabs.SEARCH, mouseX, mouseY)) {
-            renderCreativeInventoryHoveringText(CreativeTabs.INVENTORY, mouseX, mouseY);
-        }
-
         if (maxPages != 0) {
             String page = String.format("%d / %d", tabPage + 1, maxPages + 1);
             int width = fontRenderer.getStringWidth(page);
@@ -531,7 +523,7 @@ public class ItemGui extends GuiContainer {
         RenderHelper.enableGUIStandardItemLighting();
         CreativeTabs creativetabs = CREATIVE_TABS[selectedTabIndex];
         if (stupidWorkaround) {
-            setCurrentCreativeTab(CREATIVE_TABS[CREATIVE_TABS.length - 1]);
+            setCurrentCreativeTab(CREATIVE_TABS[TAB.getTabIndex()]);
             stupidWorkaround = false;
         }
 
@@ -553,8 +545,6 @@ public class ItemGui extends GuiContainer {
                 this.mc.getTextureManager().bindTexture(CREATIVE_INVENTORY_TABS);
                 drawTab(CreativeTabs.SEARCH);
             }
-            this.mc.getTextureManager().bindTexture(CREATIVE_INVENTORY_TABS);
-            drawTab(CreativeTabs.INVENTORY);
         }
 
         this.mc.getTextureManager().bindTexture(creativetabs.getBackgroundImage());

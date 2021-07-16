@@ -11,6 +11,9 @@ public class ModConfig {
     )
     public static boolean registerDebugFluids = false;
 
+    @Config.Comment("Use this to disable spooky items from showing up!")
+    public static String[] disabledSpookyItems = {"minecraft:air"};
+
     public static class Energy {
         @Config.Comment("Creative energy export cycles")
         @Config.RangeInt(min = 0, max = 256)

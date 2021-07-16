@@ -23,7 +23,10 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.floweytf.bettercreativeitems.Constants.*;
 
@@ -75,30 +78,38 @@ public class ModMain {
         LOG.info("Scanning items");
         CREATIVE_TABS = new CreativeTabs[CreativeTabs.CREATIVE_TAB_ARRAY.length];
 
-        int otherIndex = 0;
+        // copy over MC tabs, skipping inventory tab, and replacing w/ my mod tag
         for (int i = 0; i < CreativeTabs.CREATIVE_TAB_ARRAY.length; i++) {
-            if (CreativeTabs.CREATIVE_TAB_ARRAY[i] != CreativeTabs.INVENTORY) {
-                CREATIVE_TABS[otherIndex] = CreativeTabs.CREATIVE_TAB_ARRAY[i];
-                otherIndex++;
+            if (CreativeTabs.CREATIVE_TAB_ARRAY[i] == CreativeTabs.INVENTORY) {
+                TAB = CREATIVE_TABS[i] = new CreativeTabs(i, "inaccessible") {
+                    @Override
+                    public ItemStack getTabIconItem() {
+                        return new ItemStack(Registry.BARRIER, 1);
+                    }
+                };
+                CreativeTabs.CREATIVE_TAB_ARRAY[i] = CreativeTabs.INVENTORY;
+            }
+            else {
+                CREATIVE_TABS[i] = CreativeTabs.CREATIVE_TAB_ARRAY[i];
             }
         }
 
-        CreativeTabs tab = CreativeTabs.CREATIVE_TAB_ARRAY[CREATIVE_TABS.length - 1];
-
-        CREATIVE_TABS[CREATIVE_TABS.length - 1] = new CreativeTabs(CREATIVE_TABS.length - 1, "inaccessible") {
-            @Override
-            public ItemStack getTabIconItem() {
-                return new ItemStack(Registry.BARRIER, 1);
-            }
-        };
-        CreativeTabs.CREATIVE_TAB_ARRAY[CREATIVE_TABS.length - 1] = tab;
+        Set<String> spookyIDs = new HashSet<>(Arrays.asList(ModConfig.disabledSpookyItems));
 
         int itemCount = 0;
         for (Item item : Item.REGISTRY) {
-            if (item.getCreativeTab() == null) {
-                ITEMS.add(item);
-                LOG.info(item.getRegistryName().toString());
-                itemCount++;
+            if (item.getRegistryName() == null) {
+                LOG.warn("scary item with null registry name found, skipping");
+            }
+            else if (item.getCreativeTab() == null) {
+                if (spookyIDs.contains(item.getRegistryName().toString())) {
+                    LOG.debug("skipping spooky item: " + item.getRegistryName().toString());
+                }
+                else {
+                    ITEMS.add(item);
+                    LOG.debug("found item: " + item.getRegistryName().toString());
+                    itemCount++;
+                }
             }
         }
 

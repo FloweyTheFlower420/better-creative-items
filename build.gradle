@@ -20,7 +20,7 @@ apply plugin: 'maven-publish'
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = '0.4'
+version = '1.1.1'
 group = 'com.floweytf.bettercreativeitems' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'bettercreativeitems'
 
@@ -60,7 +60,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
         }
     }
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/better_creative_items_at.cfg')
 }
 
 dependencies {
@@ -85,7 +85,8 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"FloweyTF",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "FMLAT": "better_creative_items_at.cfg"
         ])
     }
 }
