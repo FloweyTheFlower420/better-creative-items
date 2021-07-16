@@ -17,11 +17,13 @@ public class SyncFluidPacket implements IMessage {
         public IMessage onMessage(SyncFluidPacket message, MessageContext ctx) {
             WorldServer world = ctx.getServerHandler().player.getServerWorld();
 
-            if (!world.isBlockLoaded(message.pos))
+            if (!world.isBlockLoaded(message.pos)) {
                 return null;
+            }
             TileEntity te = world.getTileEntity(message.pos);
-            if (!(te instanceof FluidTileEntity))
+            if (!(te instanceof FluidTileEntity)) {
                 return null;
+            }
             FluidTileEntity fte = (FluidTileEntity) te;
             fte.setFluid(message.fluidID);
             return null;

@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.achievement.GuiStats;
 import net.minecraft.client.gui.inventory.CreativeCrafting;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -38,7 +37,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static com.floweytf.bettercreativeitems.Constants.*;
+import static com.floweytf.bettercreativeitems.Constants.CREATIVE_TABS;
+import static com.floweytf.bettercreativeitems.Constants.ITEMS;
 
 // Code yoinked from MC, just w/ a small extra thing.
 @SuppressWarnings("NullableProblems")
@@ -56,6 +56,7 @@ public class ItemGui extends GuiContainer {
     private static int tabPage = 0;
     private int maxPages = 0;
     private boolean stupidWorkaround = true;
+
     public ItemGui(EntityPlayer player) {
         super(new ItemContainer(player));
         player.openContainer = this.inventorySlots;
@@ -270,8 +271,9 @@ public class ItemGui extends GuiContainer {
                             break;
                         }
                     }
-                    if (!matches)
+                    if (!matches) {
                         itr.remove();
+                    }
                 }
             }
             this.currentScroll = 0.0F;
@@ -356,7 +358,7 @@ public class ItemGui extends GuiContainer {
                             itemstack.getOrCreateSubCompound("CustomCreativeLock");
                             String s = GameSettings.getKeyDisplayString(this.mc.gameSettings.keyBindsHotbar[j].getKeyCode());
                             String s1 = GameSettings.getKeyDisplayString(this.mc.gameSettings.keyBindSaveToolbar.getKeyCode());
-                            itemstack.setStackDisplayName((new TextComponentTranslation("inventory.hotbarInfo", new Object[]{s1, s})).getUnformattedText());
+                            itemstack.setStackDisplayName((new TextComponentTranslation("inventory.hotbarInfo", s1, s)).getUnformattedText());
                             container.itemList.add(itemstack);
                         }
                         else {
@@ -370,8 +372,9 @@ public class ItemGui extends GuiContainer {
             }
         }
         else if (tab == CREATIVE_TABS[CREATIVE_TABS.length - 1]) {
-            for(Item item : ITEMS)
+            for (Item item : ITEMS) {
                 container.itemList.add(new ItemStack(item));
+            }
         }
         else if (tab != CreativeTabs.SEARCH) {
             tab.displayAllRelevantItems(container.itemList);
@@ -506,10 +509,10 @@ public class ItemGui extends GuiContainer {
 
             for (int i = 0; i < list.size(); ++i) {
                 if (i == 0) {
-                    list.set(i, stack.getItem().getForgeRarity(stack).getColor() + (String) list.get(i));
+                    list.set(i, stack.getItem().getForgeRarity(stack).getColor() + list.get(i));
                 }
                 else {
-                    list.set(i, TextFormatting.GRAY + (String) list.get(i));
+                    list.set(i, TextFormatting.GRAY + list.get(i));
                 }
             }
 
@@ -527,7 +530,7 @@ public class ItemGui extends GuiContainer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         RenderHelper.enableGUIStandardItemLighting();
         CreativeTabs creativetabs = CREATIVE_TABS[selectedTabIndex];
-        if(stupidWorkaround) {
+        if (stupidWorkaround) {
             setCurrentCreativeTab(CREATIVE_TABS[CREATIVE_TABS.length - 1]);
             stupidWorkaround = false;
         }

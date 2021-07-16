@@ -1,6 +1,8 @@
 package com.floweytf.bettercreativeitems.utils;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class SearchedArrayList<T> extends AbstractList<T> {
@@ -17,15 +19,17 @@ public class SearchedArrayList<T> extends AbstractList<T> {
 
     @Override
     public T get(int index) {
-        if (str.length() == 0)
+        if (str.length() == 0) {
             return source.get(index);
+        }
         return source.get(locations.get(index));
     }
 
     @Override
     public int size() {
-        if (str.length() == 0)
+        if (str.length() == 0) {
             return source.size();
+        }
         return locations.size();
     }
 
@@ -35,15 +39,16 @@ public class SearchedArrayList<T> extends AbstractList<T> {
         locations.clear();
         for (int i = 0; i < source.size(); i++) {
             String name = searcher.apply(source.get(i)).toLowerCase();
-            if (name.contains(str))
+            if (name.contains(str)) {
                 locations.add(i);
+            }
         }
     }
 
     public void appendSearchChar(char ch) {
         str += ch;
         str = str.toLowerCase();
-        if(str.length() == 1) {
+        if (str.length() == 1) {
             setSearchStr(str);
             return;
         }
@@ -51,8 +56,9 @@ public class SearchedArrayList<T> extends AbstractList<T> {
         List<Integer> other = new ArrayList<>();
         for (Integer location : locations) {
             String name = searcher.apply(source.get(location)).toLowerCase();
-            if (name.contains(str))
+            if (name.contains(str)) {
                 other.add(location);
+            }
         }
         locations = other;
     }

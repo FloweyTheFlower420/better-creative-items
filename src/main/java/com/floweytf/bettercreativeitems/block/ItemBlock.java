@@ -1,7 +1,6 @@
 package com.floweytf.bettercreativeitems.block;
 
 import com.floweytf.bettercreativeitems.ModMain;
-import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.ItemTileEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -12,7 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static com.floweytf.bettercreativeitems.Constants.*;
+import static com.floweytf.bettercreativeitems.Constants.GUI_ID_ITEM;
 
 @SuppressWarnings("NullableProblems")
 public class ItemBlock extends BlockBase {
@@ -34,10 +33,12 @@ public class ItemBlock extends BlockBase {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
         TileEntity te = worldIn.getTileEntity(pos);
 
-        if (!(te instanceof ItemTileEntity))
+        if (!(te instanceof ItemTileEntity)) {
             return true;
-        if (worldIn.isRemote)
+        }
+        if (worldIn.isRemote) {
             return true;
+        }
 
         playerIn.openGui(ModMain.instance, GUI_ID_ITEM, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;

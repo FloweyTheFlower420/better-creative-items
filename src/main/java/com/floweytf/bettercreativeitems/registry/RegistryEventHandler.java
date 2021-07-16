@@ -1,9 +1,9 @@
 package com.floweytf.bettercreativeitems.registry;
 
-import com.floweytf.bettercreativeitems.block.ItemBlock;
-import com.floweytf.bettercreativeitems.utils.MyItemBlock;
 import com.floweytf.bettercreativeitems.block.EnergyBlock;
 import com.floweytf.bettercreativeitems.block.FluidBlock;
+import com.floweytf.bettercreativeitems.block.ItemBlock;
+import com.floweytf.bettercreativeitems.utils.MyItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;

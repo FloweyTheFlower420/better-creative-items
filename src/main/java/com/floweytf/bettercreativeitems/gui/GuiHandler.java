@@ -1,6 +1,5 @@
 package com.floweytf.bettercreativeitems.gui;
 
-import static com.floweytf.bettercreativeitems.Constants.*;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import com.floweytf.bettercreativeitems.container.ItemContainer;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
@@ -8,6 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
+
+import static com.floweytf.bettercreativeitems.Constants.GUI_ID_FLUID;
+import static com.floweytf.bettercreativeitems.Constants.GUI_ID_ITEM;
 
 public class GuiHandler implements IGuiHandler {
     @Override

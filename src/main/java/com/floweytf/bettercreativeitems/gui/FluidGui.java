@@ -6,7 +6,6 @@ import com.floweytf.bettercreativeitems.network.SyncFluidPacket;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import com.floweytf.bettercreativeitems.utils.SearchedArrayList;
 import com.floweytf.bettercreativeitems.utils.Utils;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,7 +23,7 @@ import java.util.Collections;
 import static com.floweytf.bettercreativeitems.Constants.FLUIDS;
 import static com.floweytf.bettercreativeitems.Constants.id;
 import static com.floweytf.bettercreativeitems.tileentity.FluidTileEntity.emptyFluid;
-import static com.floweytf.bettercreativeitems.utils.Utils.*;
+import static com.floweytf.bettercreativeitems.utils.Utils.getFluidName;
 
 public class FluidGui extends GuiContainer {
     private static final ResourceLocation GUI_CREATIVE_FLUID = id("textures/gui/fluid.png");
@@ -48,8 +47,9 @@ public class FluidGui extends GuiContainer {
         int i = (searchedFluids.size() + 9 - 1) / 9 - 5;
         int j = (int) ((double) (currentScrollPos * (float) i) + 0.5D);
 
-        if (j < 0)
+        if (j < 0) {
             j = 0;
+        }
 
         return j;
     }
@@ -70,6 +70,47 @@ public class FluidGui extends GuiContainer {
         net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
 
+    private void renderBackground() {
+        this.mc.getTextureManager().bindTexture(GUI_CREATIVE_FLUID);
+        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+        double scaledPos = currentScrollPos * 95;
+        this.drawTexturedModalRect(this.guiLeft + 175, this.guiTop + 18 + (int) scaledPos, 195, 0, 12, 15);
+    }
+
+    private void renderFluids() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 9; j++) {
+                int index = getStartIndex() + i;
+                if (index * 9 + j < searchedFluids.size()) {
+                    renderFluid(searchedFluids.get(index * 9 + j), 8 + j * 18, 17 + i * 18);
+                }
+            }
+        }
+
+        if (te.getFluid() != null) {
+            renderFluid(te.getFluid(), 8, 111);
+        }
+    }
+
+    private void renderToolTips(int x, int y) {
+        if (8 < x && x < 169 && 17 < y && y < 106) {
+            // do math
+            int slotX = (x - 8) / 18;
+            int slotY = (y - 17) / 18;
+
+            // obtain fluid at pos
+            int index = (slotY + getStartIndex()) * 9 + slotX;
+            if (index < searchedFluids.size()) {
+                renderFluidToolTip(searchedFluids.get(index), x, y);
+            }
+        }
+        else if (8 < x && x < 25 && 111 < y && y < 128) {
+            if (te.getFluid() != null) {
+                renderFluidToolTip(te.getFluid(), x, y);
+            }
+        }
+    }
+
     @Override
     public void initGui() {
         super.initGui();
@@ -86,45 +127,14 @@ public class FluidGui extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-        this.mc.getTextureManager().bindTexture(GUI_CREATIVE_FLUID);
-        this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-        double scaledPos = currentScrollPos * 95;
-        this.drawTexturedModalRect(this.guiLeft + 175, this.guiTop + 18 + (int) scaledPos, 195, 0, 12, 15);
+        renderBackground();
+        renderFluids();
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        mouseX = mouseX - guiLeft;
-        mouseY = mouseY - guiTop;
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 9; j++) {
-                int index = getStartIndex() + i;
-                if (index * 9 + j < searchedFluids.size())
-                    renderFluid(searchedFluids.get(index * 9 + j), 8 + j * 18, 17 + i * 18);
-            }
-        }
-
-        if (te.getFluid() != null) {
-            renderFluid(te.getFluid(), 8, 111);
-        }
-
-        if (8 < mouseX && mouseX < 169 && 17 < mouseY && mouseY < 106) {
-            // do math
-            int slotX = (mouseX - 8) / 18;
-            int slotY = (mouseY - 17) / 18;
-
-            // obtain fluid at pos
-            int index = (slotY + getStartIndex()) * 9 + slotX;
-            if (index < searchedFluids.size())
-                renderFluidToolTip(searchedFluids.get(index), mouseX, mouseY);
-        }
-        else if (8 < mouseX && mouseX < 25 && 111 < mouseY && mouseY < 128) {
-            if (te.getFluid() != null)
-                renderFluidToolTip(te.getFluid(), mouseX, mouseY);
-        }
-
         searchBar.drawTextBox();
+        renderToolTips(mouseX - guiLeft, mouseY - guiTop);
     }
 
     @Override
@@ -189,11 +199,13 @@ public class FluidGui extends GuiContainer {
         if (i != 0 && this.needsScrollBars()) {
             int j = (searchedFluids.size() + 9 - 1) / 9 - 5;
 
-            if (i > 0)
+            if (i > 0) {
                 i = 1;
+            }
 
-            if (i < 0)
+            if (i < 0) {
                 i = -1;
+            }
 
             this.currentScrollPos = (float) ((double) this.currentScrollPos - (double) i / (double) j);
             this.currentScrollPos = MathHelper.clamp(this.currentScrollPos, 0.0F, 1.0F);
@@ -210,13 +222,16 @@ public class FluidGui extends GuiContainer {
 
         if (!this.checkHotbarKeys(keyCode)) {
             if (this.searchBar.textboxKeyTyped(typedChar, keyCode)) {
-                if (typedChar == '\b')
+                if (typedChar == '\b') {
                     searchedFluids.setSearchStr(searchBar.getText());
-                else
+                }
+                else {
                     searchedFluids.appendSearchChar(typedChar);
+                }
             }
-            else
+            else {
                 super.keyTyped(typedChar, keyCode);
+            }
         }
     }
 }

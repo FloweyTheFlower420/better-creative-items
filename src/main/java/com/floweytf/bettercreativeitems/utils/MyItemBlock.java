@@ -5,7 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 
-import static com.floweytf.bettercreativeitems.Constants.*;
+import static com.floweytf.bettercreativeitems.Constants.MOD_ID;
+import static com.floweytf.bettercreativeitems.Constants.id;
 
 public class MyItemBlock extends ItemBlock {
     public MyItemBlock(Block block, String id) {

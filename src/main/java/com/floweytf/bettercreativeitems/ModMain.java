@@ -2,6 +2,7 @@ package com.floweytf.bettercreativeitems;
 
 import com.floweytf.bettercreativeitems.gui.GuiHandler;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
+import com.floweytf.bettercreativeitems.proxy.CommonProxy;
 import com.floweytf.bettercreativeitems.registry.Registry;
 import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
@@ -28,8 +29,8 @@ import static com.floweytf.bettercreativeitems.Constants.*;
 
 @Mod(modid = Constants.MOD_ID, name = Constants.NAME, version = Constants.VERSION)
 public class ModMain {
-    @SidedProxy(clientSide = "com.floweytf.bettercreativeitems.CommonProxy",
-        serverSide = "com.floweytf.bettercreativeitems.CommonProxy")
+    @SidedProxy(clientSide = "com.floweytf.bettercreativeitems.proxy.ClientProxy",
+        serverSide = "com.floweytf.bettercreativeitems.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.Instance
@@ -75,7 +76,7 @@ public class ModMain {
         CREATIVE_TABS = new CreativeTabs[CreativeTabs.CREATIVE_TAB_ARRAY.length];
 
         int otherIndex = 0;
-        for(int i = 0; i < CreativeTabs.CREATIVE_TAB_ARRAY.length; i++) {
+        for (int i = 0; i < CreativeTabs.CREATIVE_TAB_ARRAY.length; i++) {
             if (CreativeTabs.CREATIVE_TAB_ARRAY[i] != CreativeTabs.INVENTORY) {
                 CREATIVE_TABS[otherIndex] = CreativeTabs.CREATIVE_TAB_ARRAY[i];
                 otherIndex++;

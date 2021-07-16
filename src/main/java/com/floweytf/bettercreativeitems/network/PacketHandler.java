@@ -1,9 +1,10 @@
 package com.floweytf.bettercreativeitems.network;
 
-import static com.floweytf.bettercreativeitems.Constants.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
+
+import static com.floweytf.bettercreativeitems.Constants.MOD_ID;
 
 public class PacketHandler {
     public static final SimpleNetworkWrapper INSTANCE =

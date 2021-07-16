@@ -17,8 +17,9 @@ public class CreativeFluidHandler implements IFluidHandler {
                 @Nullable
                 @Override
                 public FluidStack getContents() {
-                    if (fluid == null)
+                    if (fluid == null) {
                         return null;
+                    }
                     return new FluidStack(fluid, Integer.MAX_VALUE);
                 }
 
@@ -44,8 +45,9 @@ public class CreativeFluidHandler implements IFluidHandler {
 
                 @Override
                 public boolean canDrainFluidType(FluidStack fluidStack) {
-                    if (fluid == null)
+                    if (fluid == null) {
                         return false;
+                    }
                     return fluidStack.getFluid() == fluid;
                 }
             }
@@ -60,18 +62,21 @@ public class CreativeFluidHandler implements IFluidHandler {
     @Nullable
     @Override
     public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (fluid == null)
+        if (fluid == null) {
             return null;
-        if (resource.getFluid() == fluid)
+        }
+        if (resource.getFluid() == fluid) {
             return resource;
+        }
         return null;
     }
 
     @Nullable
     @Override
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        if (fluid == null)
+        if (fluid == null) {
             return null;
+        }
         return new FluidStack(fluid, maxDrain);
     }
 }
