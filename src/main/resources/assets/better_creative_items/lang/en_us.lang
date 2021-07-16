@@ -1,0 +1,8 @@
+language.name=English
+language.region=United States
+language.code=en_US
+
+tile.better_creative_items.energy.name=Creative Energy Provider
+tile.better_creative_items.fluid.name=Creative Fluid Provider
+tile.better_creative_items.item.name=Creative Item Provider
+

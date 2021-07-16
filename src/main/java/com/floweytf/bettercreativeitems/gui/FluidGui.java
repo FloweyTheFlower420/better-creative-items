@@ -1,11 +1,12 @@
 package com.floweytf.bettercreativeitems.gui;
 
-import com.floweytf.bettercreativeitems.Constants;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
 import com.floweytf.bettercreativeitems.network.SyncFluidPacket;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import com.floweytf.bettercreativeitems.utils.SearchedArrayList;
+import com.floweytf.bettercreativeitems.utils.Utils;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,14 +16,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import static com.floweytf.bettercreativeitems.Constants.FLUIDS;
 import static com.floweytf.bettercreativeitems.Constants.id;
 import static com.floweytf.bettercreativeitems.tileentity.FluidTileEntity.emptyFluid;
+import static com.floweytf.bettercreativeitems.utils.Utils.*;
 
 public class FluidGui extends GuiContainer {
     private static final ResourceLocation GUI_CREATIVE_FLUID = id("textures/gui/fluid.png");
@@ -31,7 +33,7 @@ public class FluidGui extends GuiContainer {
     private boolean isScrolling = false;
     private boolean clearSearch = false;
     private GuiTextField searchBar;
-    private final SearchedArrayList<Fluid> searchedFluids = new SearchedArrayList<>(FLUIDS, Constants::getFluidName);
+    private final SearchedArrayList<Fluid> searchedFluids = new SearchedArrayList<>(FLUIDS, Utils::getFluidName);
 
     public FluidGui(FluidTileEntity te) {
         super(new FluidContainer());
@@ -39,6 +41,7 @@ public class FluidGui extends GuiContainer {
 
         this.xSize = 194;
         this.ySize = 135;
+
     }
 
     private int getStartIndex() {
@@ -60,6 +63,11 @@ public class FluidGui extends GuiContainer {
         TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
         GlStateManager.color(1.0F, 1.0F, 1.0F);
         drawTexturedModalRect(x + 1, y + 1, sprite, 16, 16);
+    }
+
+    private void renderFluidToolTip(Fluid fluid, int x, int y) {
+        drawHoveringText(Collections.singletonList(getFluidName(fluid)), x, y, fontRenderer);
+        net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
 
     @Override
@@ -86,6 +94,9 @@ public class FluidGui extends GuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        mouseX = mouseX - guiLeft;
+        mouseY = mouseY - guiTop;
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
                 int index = getStartIndex() + i;
@@ -96,6 +107,21 @@ public class FluidGui extends GuiContainer {
 
         if (te.getFluid() != null) {
             renderFluid(te.getFluid(), 8, 111);
+        }
+
+        if (8 < mouseX && mouseX < 169 && 17 < mouseY && mouseY < 106) {
+            // do math
+            int slotX = (mouseX - 8) / 18;
+            int slotY = (mouseY - 17) / 18;
+
+            // obtain fluid at pos
+            int index = (slotY + getStartIndex()) * 9 + slotX;
+            if (index < searchedFluids.size())
+                renderFluidToolTip(searchedFluids.get(index), mouseX, mouseY);
+        }
+        else if (8 < mouseX && mouseX < 25 && 111 < mouseY && mouseY < 128) {
+            if (te.getFluid() != null)
+                renderFluidToolTip(te.getFluid(), mouseX, mouseY);
         }
 
         searchBar.drawTextBox();

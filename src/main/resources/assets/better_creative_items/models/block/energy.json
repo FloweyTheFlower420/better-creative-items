@@ -1,6 +1,7 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube_column",
   "textures":{
-    "all": "better_creative_items:block/energy"
+    "end": "better_creative_items:block/top",
+    "side": "better_creative_items:block/energy"
   }
 }

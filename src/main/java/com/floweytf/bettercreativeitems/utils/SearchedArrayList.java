@@ -34,7 +34,7 @@ public class SearchedArrayList<T> extends AbstractList<T> {
         str = str.toLowerCase();
         locations.clear();
         for (int i = 0; i < source.size(); i++) {
-            String name = searcher.apply(source.get(i));
+            String name = searcher.apply(source.get(i)).toLowerCase();
             if (name.contains(str))
                 locations.add(i);
         }
@@ -45,10 +45,10 @@ public class SearchedArrayList<T> extends AbstractList<T> {
         str = str.toLowerCase();
         // redo search
         List<Integer> other = new ArrayList<>();
-        for (int i = 0; i < locations.size(); i++) {
-            String name = searcher.apply(source.get(locations.get(i))).toLowerCase();
+        for (Integer location : locations) {
+            String name = searcher.apply(source.get(location)).toLowerCase();
             if (name.contains(str))
-                other.add(locations.get(i));
+                other.add(location);
         }
         locations = other;
     }

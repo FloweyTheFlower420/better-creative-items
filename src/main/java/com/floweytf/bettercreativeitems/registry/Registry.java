@@ -17,4 +17,13 @@ public class Registry {
 
     @GameRegistry.ObjectHolder("fluid")
     public static final Block FLUID_BLOCK = null;
+
+    @GameRegistry.ObjectHolder("item")
+    public static final Item ITEM_ITEM = null;
+
+    @GameRegistry.ObjectHolder("item")
+    public static final Block ITEM_BLOCK = null;
+
+    @GameRegistry.ObjectHolder("minecraft:barrier")
+    public static final Item BARRIER = null;
 }

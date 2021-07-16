@@ -11,7 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import static com.floweytf.bettercreativeitems.Constants.GUI_ID_FLUID;
+import static com.floweytf.bettercreativeitems.Constants.*;
 
 @SuppressWarnings("NullableProblems")
 public class FluidBlock extends BlockBase {

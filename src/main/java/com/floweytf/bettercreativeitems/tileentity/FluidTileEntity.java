@@ -4,6 +4,7 @@ import static com.floweytf.bettercreativeitems.Constants.*;
 
 import com.floweytf.bettercreativeitems.capabilities.CreativeFluidHandler;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
+import com.floweytf.bettercreativeitems.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -25,8 +26,8 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("NullableProblems")
 public class FluidTileEntity extends TileEntity implements IInteractionObject {
-    private static final String TRANSLATION_KEY = translationKey("container", "fluid", "name");
-    private static final String GUI_ID = id(NBT_TAG_NAME).toString();
+    private static final String TRANSLATION_KEY = Utils.translationKey("container", "fluid", "name");
+    private static final String GUI_ID = id("fluid").toString();
 
     private final CreativeFluidHandler cap = new CreativeFluidHandler();
 

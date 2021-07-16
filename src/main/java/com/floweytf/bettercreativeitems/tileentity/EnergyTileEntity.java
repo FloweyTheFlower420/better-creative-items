@@ -12,6 +12,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("NullableProblems")
 public class EnergyTileEntity extends TileEntity implements ITickable {
     private final IEnergyStorage cap = new CreativeEnergyStorage();
 

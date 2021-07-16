@@ -2,6 +2,6 @@
   "parent": "block/cube_column",
   "textures":{
     "end": "better_creative_items:block/top",
-    "side": "better_creative_items:block/fluid"
+    "side": "better_creative_items:block/item"
   }
 }
