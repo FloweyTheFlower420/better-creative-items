@@ -1,6 +1,7 @@
 package com.floweytf.bettercreativeitems.gui;
 
 import com.floweytf.bettercreativeitems.container.ItemContainer;
+import com.floweytf.bettercreativeitems.network.CreativeInventoryPacket;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.achievement.GuiStats;
@@ -75,13 +76,13 @@ public class ItemGui extends GuiContainer {
             if (!playerInventory.getItemStack().isEmpty()) {
                 if (mouseButton == 0) {
                     this.mc.player.dropItem(playerInventory.getItemStack(), true);
-                    this.mc.playerController.sendPacketDropItem(playerInventory.getItemStack());
+                    CreativeInventoryPacket.sendPacket(-1, playerInventory.getItemStack());
                     playerInventory.setItemStack(ItemStack.EMPTY);
                 }
                 if (mouseButton == 1) {
                     ItemStack itemstack6 = playerInventory.getItemStack().splitStack(1);
                     this.mc.player.dropItem(itemstack6, true);
-                    this.mc.playerController.sendPacketDropItem(itemstack6);
+                    CreativeInventoryPacket.sendPacket(-1, itemstack6);
                 }
             }
         }
@@ -91,7 +92,7 @@ public class ItemGui extends GuiContainer {
             }
             if (slotIn == this.destroyItemSlot && flag) {
                 for (int j = 0; j < this.mc.player.inventoryContainer.getInventory().size(); ++j) {
-                    this.mc.playerController.sendSlotPacket(ItemStack.EMPTY, j);
+                    CreativeInventoryPacket.sendPacket(j, ItemStack.EMPTY);
                 }
             }
             else if (type != ClickType.QUICK_CRAFT && slotIn.inventory == basicInventory) {
@@ -119,15 +120,13 @@ public class ItemGui extends GuiContainer {
 
                     return;
                 }
-
                 if (type == ClickType.THROW) {
                     if (!itemstack7.isEmpty()) {
                         ItemStack itemstack8 = itemstack7.copy();
                         itemstack8.setCount(mouseButton == 0 ? 1 : itemstack8.getMaxStackSize());
                         this.mc.player.dropItem(itemstack8, true);
-                        this.mc.playerController.sendPacketDropItem(itemstack8);
+                        CreativeInventoryPacket.sendPacket(-1, itemstack8);
                     }
-
                     return;
                 }
 
@@ -165,21 +164,22 @@ public class ItemGui extends GuiContainer {
 
                 if (Container.getDragEvent(mouseButton) == 2) {
                     for (int k = 0; k < 9; ++k) {
-                        this.mc.playerController.sendSlotPacket(this.inventorySlots.getSlot(45 + k).getStack(), 36 + k);
+                        CreativeInventoryPacket.sendPacket(36 + k, this.inventorySlots.getSlot(45 + k).getStack());
                     }
                 }
                 else if (slotIn != null) {
                     ItemStack itemstack4 = this.inventorySlots.getSlot(slotIn.slotNumber).getStack();
-                    this.mc.playerController.sendSlotPacket(itemstack4, slotIn.slotNumber - this.inventorySlots.inventorySlots.size() + 9 + 36);
+                    CreativeInventoryPacket.sendPacket(slotIn.slotNumber - this.inventorySlots.inventorySlots.size() + 9 + 36, itemstack4);
                     int i = 45 + mouseButton;
 
                     if (type == ClickType.SWAP) {
-                        this.mc.playerController.sendSlotPacket(itemstack3, i - this.inventorySlots.inventorySlots.size() + 9 + 36);
+                        CreativeInventoryPacket.sendPacket(i - this.inventorySlots.inventorySlots.size() + 9 + 36, itemstack3);
                     }
                     else if (type == ClickType.THROW && !itemstack3.isEmpty()) {
                         ItemStack itemstack2 = itemstack3.copy();
                         itemstack2.setCount(mouseButton == 0 ? 1 : itemstack2.getMaxStackSize());
                         this.mc.player.dropItem(itemstack2, true);
+                        CreativeInventoryPacket.sendPacket(-1, itemstack2);
                         this.mc.playerController.sendPacketDropItem(itemstack2);
                     }
 

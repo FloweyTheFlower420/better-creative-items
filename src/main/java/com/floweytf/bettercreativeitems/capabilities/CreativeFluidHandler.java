@@ -1,14 +1,16 @@
 package com.floweytf.bettercreativeitems.capabilities;
 
+import com.floweytf.bettercreativeitems.utils.FluidRenderer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import scala.Int;
 
 import javax.annotation.Nullable;
 
 public class CreativeFluidHandler implements IFluidHandler {
-    public Fluid fluid = null;
+    public FluidRenderer fluid = new FluidRenderer();
 
     @Override
     public IFluidTankProperties[] getTankProperties() {
@@ -20,7 +22,7 @@ public class CreativeFluidHandler implements IFluidHandler {
                     if (fluid == null) {
                         return null;
                     }
-                    return new FluidStack(fluid, Integer.MAX_VALUE);
+                    return fluid.getAsStack(Integer.MAX_VALUE);
                 }
 
                 @Override
@@ -48,7 +50,7 @@ public class CreativeFluidHandler implements IFluidHandler {
                     if (fluid == null) {
                         return false;
                     }
-                    return fluidStack.getFluid() == fluid;
+                    return fluid.canDrainFluidType(fluidStack);
                 }
             }
         };
@@ -65,7 +67,7 @@ public class CreativeFluidHandler implements IFluidHandler {
         if (fluid == null) {
             return null;
         }
-        if (resource.getFluid() == fluid) {
+        if (fluid.canDrainFluidType(resource)) {
             return resource;
         }
         return null;
@@ -77,6 +79,6 @@ public class CreativeFluidHandler implements IFluidHandler {
         if (fluid == null) {
             return null;
         }
-        return new FluidStack(fluid, maxDrain);
+        return fluid.getAsStack(maxDrain);
     }
 }

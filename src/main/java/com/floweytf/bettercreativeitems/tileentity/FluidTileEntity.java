@@ -2,7 +2,9 @@ package com.floweytf.bettercreativeitems.tileentity;
 
 import com.floweytf.bettercreativeitems.capabilities.CreativeFluidHandler;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
+import com.floweytf.bettercreativeitems.utils.FluidRenderer;
 import com.floweytf.bettercreativeitems.utils.Utils;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -52,13 +54,13 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        setFluid(compound.getString(NBT_TAG_NAME));
+        cap.fluid.readFrom(compound.getTag(NBT_TAG_NAME));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setString(NBT_TAG_NAME, getFluidID());
+        compound.setTag(NBT_TAG_NAME, cap.fluid.getWriteTag());
         return compound;
     }
 
@@ -88,30 +90,12 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
         return false;
     }
 
-    public void setFluid(String id) {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
-        cap.fluid = FluidRegistry.getFluid(id);
-    }
 
-    public Fluid getFluid() {
-        return cap.fluid;
-    }
-
-    public String getFluidID() {
-        if (cap.fluid == null) {
-            return emptyFluid();
-        }
-        return FluidRegistry.getFluidName(cap.fluid);
-    }
-
-    public static String emptyFluid() {
-        return FLUID_ID_EMPTY;
-    }
 
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound tag = super.getUpdateTag();
-        tag.setString(NBT_TAG_NAME, getFluidID());
+        tag.setTag(NBT_TAG_NAME, cap.fluid.getWriteTag());
         return tag;
     }
 
@@ -122,7 +106,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
         if (packet == null) {
             packet = new SPacketUpdateTileEntity(pos, 1, new NBTTagCompound());
         }
-        packet.getNbtCompound().setString(NBT_TAG_NAME, getFluidID());
+        packet.getNbtCompound().setTag(NBT_TAG_NAME, cap.fluid.getWriteTag());
         return packet;
     }
 
@@ -130,12 +114,22 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         super.onDataPacket(net, pkt);
-        setFluid(pkt.getNbtCompound().getString(NBT_TAG_NAME));
+        cap.fluid.readFrom(pkt.getNbtCompound().getTag(NBT_TAG_NAME));
     }
 
     @Override
     public void handleUpdateTag(NBTTagCompound tag) {
         super.handleUpdateTag(tag);
-        setFluid(tag.getString(NBT_TAG_NAME));
+        cap.fluid.readFrom(tag.getTag(NBT_TAG_NAME));
+    }
+
+    public FluidRenderer getFluidRenderer() {
+        return cap.fluid;
+    }
+
+    public void setFluidRenderer(FluidRenderer renderer) {
+        cap.fluid = renderer;
+        IBlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(getPos(), state, state, 2);
     }
 }

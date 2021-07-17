@@ -4,8 +4,8 @@ import com.floweytf.bettercreativeitems.container.FluidContainer;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
 import com.floweytf.bettercreativeitems.network.SyncFluidPacket;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
+import com.floweytf.bettercreativeitems.utils.FluidRenderer;
 import com.floweytf.bettercreativeitems.utils.SearchedArrayList;
-import com.floweytf.bettercreativeitems.utils.Utils;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -22,8 +22,6 @@ import java.util.Collections;
 
 import static com.floweytf.bettercreativeitems.Constants.FLUIDS;
 import static com.floweytf.bettercreativeitems.Constants.id;
-import static com.floweytf.bettercreativeitems.tileentity.FluidTileEntity.emptyFluid;
-import static com.floweytf.bettercreativeitems.utils.Utils.getFluidName;
 
 public class FluidGui extends GuiContainer {
     private static final ResourceLocation GUI_CREATIVE_FLUID = id("textures/gui/fluid.png");
@@ -32,7 +30,7 @@ public class FluidGui extends GuiContainer {
     private boolean isScrolling = false;
     private boolean clearSearch = false;
     private GuiTextField searchBar;
-    private final SearchedArrayList<Fluid> searchedFluids = new SearchedArrayList<>(FLUIDS, Utils::getFluidName);
+    private final SearchedArrayList<FluidRenderer> searchedFluids = new SearchedArrayList<>(FLUIDS, FluidRenderer::getName);
 
     public FluidGui(FluidTileEntity te) {
         super(new FluidContainer());
@@ -58,15 +56,8 @@ public class FluidGui extends GuiContainer {
         return searchedFluids.size() >= 5 * 9;
     }
 
-    private void renderFluid(Fluid fluid, int x, int y) {
-        this.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        TextureAtlasSprite sprite = this.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
-        drawTexturedModalRect(x + 1, y + 1, sprite, 16, 16);
-    }
-
-    private void renderFluidToolTip(Fluid fluid, int x, int y) {
-        drawHoveringText(Collections.singletonList(getFluidName(fluid)), x, y, fontRenderer);
+    private void renderToolTip(String name, int x, int y) {
+        drawHoveringText(Collections.singletonList(name), x, y, fontRenderer);
         net.minecraftforge.fml.client.config.GuiUtils.postItemToolTip();
     }
 
@@ -81,14 +72,13 @@ public class FluidGui extends GuiContainer {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
                 int index = getStartIndex() + i;
-                if (index * 9 + j < searchedFluids.size()) {
-                    renderFluid(searchedFluids.get(index * 9 + j), 8 + j * 18, 17 + i * 18);
-                }
+                if (index * 9 + j < searchedFluids.size())
+                    searchedFluids.get(index * 9 + j).draw(8 + j * 18, 17 + i * 18, this);
             }
         }
 
-        if (te.getFluid() != null) {
-            renderFluid(te.getFluid(), 8, 111);
+        if (!te.getFluidRenderer().isEmpty()) {
+            te.getFluidRenderer().draw(8, 111, this);
         }
     }
 
@@ -101,12 +91,12 @@ public class FluidGui extends GuiContainer {
             // obtain fluid at pos
             int index = (slotY + getStartIndex()) * 9 + slotX;
             if (index < searchedFluids.size()) {
-                renderFluidToolTip(searchedFluids.get(index), x, y);
+                renderToolTip(searchedFluids.get(index).getName(), x, y);
             }
         }
         else if (8 < x && x < 25 && 111 < y && y < 128) {
-            if (te.getFluid() != null) {
-                renderFluidToolTip(te.getFluid(), x, y);
+            if (!te.getFluidRenderer().isEmpty()) {
+                renderToolTip(te.getFluidRenderer().getName(), x, y);
             }
         }
     }
@@ -154,17 +144,17 @@ public class FluidGui extends GuiContainer {
             int index = (slotY + getStartIndex()) * 9 + slotX;
             if (index >= searchedFluids.size()) {
                 // clear slot selected
-                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(emptyFluid(), te.getPos()));
+                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(new FluidRenderer(), te.getPos()));
             }
             else {
                 // set fluid
-                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(FluidRegistry.getFluidName(searchedFluids.get(index)), te.getPos()));
+                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(searchedFluids.get(index), te.getPos()));
             }
         }
         else if (8 < mouseX && mouseX < 25 && 111 < mouseY && mouseY < 128) {
-            if (te.getFluid() != null) {
+            if (!te.getFluidRenderer().isEmpty()) {
                 // clear fluid
-                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(emptyFluid(), te.getPos()));
+                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(new FluidRenderer(), te.getPos()));
             }
         }
         else if (174 < mouseX && mouseX < 187 && 17 < mouseY && mouseY < 128) {

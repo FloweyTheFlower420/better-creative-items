@@ -14,5 +14,6 @@ public class PacketHandler {
         int packetId = 0;
         // register messages from client to server
         INSTANCE.registerMessage(SyncFluidPacket.MessageHandler.class, SyncFluidPacket.class, packetId++, Side.SERVER);
+        INSTANCE.registerMessage(CreativeInventoryPacket.MessageHandler.class, CreativeInventoryPacket.class, packetId++, Side.SERVER);
     }
 }

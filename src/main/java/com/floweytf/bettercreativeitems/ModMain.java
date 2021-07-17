@@ -7,6 +7,7 @@ import com.floweytf.bettercreativeitems.registry.Registry;
 import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.ItemTileEntity;
+import com.floweytf.bettercreativeitems.utils.FluidRenderer;
 import com.floweytf.bettercreativeitems.utils.Utils;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -14,9 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -69,8 +72,8 @@ public class ModMain {
 
     private void initFluids() {
         LOG.info("Scanning fluids");
-        FLUIDS.addAll(FluidRegistry.getRegisteredFluids().values());
-        FLUIDS.sort(Comparator.comparing(Utils::getFluidName));
+        FluidRegistry.getRegisteredFluids().forEach((k, v) -> FLUIDS.add(new FluidRenderer(v)));
+        FLUIDS.sort(Comparator.comparing(FluidRenderer::getName));
         LOG.info("Scanning fluids done, with " + FLUIDS.size() + " fluids found!");
     }
 
@@ -114,5 +117,12 @@ public class ModMain {
         }
 
         LOG.info("Found " + itemCount + " items belonging to no creative tab");
+    }
+
+    @Mod.EventHandler
+    public void interModComms(FMLInterModComms.IMCEvent event) {
+        event.getMessages().stream().forEach(imcMessage -> {
+            String str = imcMessage.getStringValue();
+        });
     }
 }
