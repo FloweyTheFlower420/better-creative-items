@@ -12,7 +12,6 @@ import net.minecraft.world.IInteractionObject;
 
 import javax.annotation.Nonnull;
 
-import static com.floweytf.bettercreativeitems.Constants.FLUID_ID_EMPTY;
 import static com.floweytf.bettercreativeitems.Constants.id;
 
 @SuppressWarnings("NullableProblems")

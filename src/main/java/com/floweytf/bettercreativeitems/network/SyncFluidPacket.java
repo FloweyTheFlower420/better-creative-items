@@ -1,6 +1,5 @@
 package com.floweytf.bettercreativeitems.network;
 
-import com.floweytf.bettercreativeitems.Constants;
 import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;

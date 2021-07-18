@@ -4,9 +4,9 @@ import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
 import com.floweytf.bettercreativeitems.network.SyncFluidPacket;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
-import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import com.floweytf.bettercreativeitems.utils.SearchedArrayList;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -69,8 +69,9 @@ public class FluidGui extends GuiContainer {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
                 int index = getStartIndex() + i;
-                if (index * 9 + j < searchedFluids.size())
+                if (index * 9 + j < searchedFluids.size()) {
                     searchedFluids.get(index * 9 + j).draw(8 + j * 18, 17 + i * 18, this);
+                }
             }
         }
 

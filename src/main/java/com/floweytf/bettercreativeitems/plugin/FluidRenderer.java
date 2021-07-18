@@ -5,22 +5,17 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static com.floweytf.bettercreativeitems.Constants.FLUID_ID_EMPTY;
 
 public class FluidRenderer implements IFluidRenderer {
     @Nullable
     protected Fluid fluid = null;
 
-    private FluidRenderer() {}
+    private FluidRenderer() {
+    }
 
     private FluidRenderer(@NotNull Fluid fluid) {
         this.fluid = fluid;
@@ -50,8 +45,9 @@ public class FluidRenderer implements IFluidRenderer {
     }
 
     public FluidStack getAsStack(int amount) {
-        if(fluid == null)
+        if (fluid == null) {
             return null;
+        }
         return new FluidStack(fluid, amount);
     }
 

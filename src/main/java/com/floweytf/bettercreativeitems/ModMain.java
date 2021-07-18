@@ -1,15 +1,14 @@
 package com.floweytf.bettercreativeitems;
 
-import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.gui.GuiHandler;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.proxy.CommonProxy;
 import com.floweytf.bettercreativeitems.registry.Registry;
 import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.ItemTileEntity;
-import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,7 +18,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -27,7 +25,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -73,7 +70,7 @@ public class ModMain {
     private void initFluids() {
         LOG.info("Scanning fluids");
         FluidRegistry.getRegisteredFluids().forEach((k, v) -> {
-            FluidRendererRegistry.register(id(k),FluidRenderer.getFromFluid(v));
+            FluidRendererRegistry.register(id(k), FluidRenderer.getFromFluid(v));
         });
         FluidRendererRegistry.sort();
         LOG.info("Scanning fluids done, with " + FluidRendererRegistry.size() + " fluids found!");

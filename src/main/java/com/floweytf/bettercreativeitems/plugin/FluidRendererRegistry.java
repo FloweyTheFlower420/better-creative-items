@@ -25,8 +25,9 @@ public class FluidRendererRegistry {
     }
 
     public static IFluidRenderer get(ResourceLocation id) {
-        if(ID_TO_FLUIDS.containsKey(id))
+        if (ID_TO_FLUIDS.containsKey(id)) {
             return ID_TO_FLUIDS.get(id);
+        }
         return FluidRenderer.EMPTY;
     }
 
@@ -35,8 +36,9 @@ public class FluidRendererRegistry {
     }
 
     public static ResourceLocation get(IFluidRenderer renderer) {
-        if(ID_TO_FLUIDS.inverse().containsKey(renderer))
+        if (ID_TO_FLUIDS.inverse().containsKey(renderer)) {
             return ID_TO_FLUIDS.inverse().get(renderer);
+        }
         return FLUID_ID_EMPTY;
     }
 

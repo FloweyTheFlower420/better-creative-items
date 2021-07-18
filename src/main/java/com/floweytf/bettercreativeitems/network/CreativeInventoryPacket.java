@@ -1,13 +1,11 @@
 package com.floweytf.bettercreativeitems.network;
 
+import com.floweytf.bettercreativeitems.container.ItemContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.PacketUtil;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -19,27 +17,32 @@ public class CreativeInventoryPacket implements IMessage {
         @Override
         public IMessage onMessage(CreativeInventoryPacket message, MessageContext ctx) {
             EntityPlayerMP player = ctx.getServerHandler().player;
+            // safe check
+            if (!(player.openContainer instanceof ItemContainer)) {
+                return null;
+            }
             ItemStack itemstack = message.stack;
             boolean isDrop = message.slotId < 0;
             boolean isValidSlot = message.slotId >= 1 && message.slotId <= 45;
             boolean isValid = itemstack.isEmpty() || itemstack.getMetadata() >= 0 && itemstack.getCount() <= 64 && !itemstack.isEmpty();
 
-            if (isValidSlot && isValid)
-            {
-                if (itemstack.isEmpty())
+            if (isValidSlot && isValid) {
+                if (itemstack.isEmpty()) {
                     player.inventoryContainer.putStackInSlot(message.slotId, ItemStack.EMPTY);
-                else
+                }
+                else {
                     player.inventoryContainer.putStackInSlot(message.slotId, itemstack);
+                }
 
                 player.inventoryContainer.setCanCraft(player, true);
             }
-            else if (isDrop && isValid /*&& this.itemDropThreshold < 200*/)
-            {
+            else if (isDrop && isValid /*&& this.itemDropThreshold < 200*/) {
                 //this.itemDropThreshold += 20;
                 EntityItem entityitem = player.dropItem(itemstack, true);
 
-                if (entityitem != null)
+                if (entityitem != null) {
                     entityitem.setAgeToCreativeDespawnTime();
+                }
             }
 
             return null;

@@ -3,7 +3,6 @@ package com.floweytf.bettercreativeitems.tileentity;
 import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.capabilities.CreativeFluidHandler;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
-import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.utils.Utils;
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +23,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.floweytf.bettercreativeitems.Constants.*;
+import static com.floweytf.bettercreativeitems.Constants.NBT_TAG_NAME;
+import static com.floweytf.bettercreativeitems.Constants.id;
 
 @SuppressWarnings("NullableProblems")
 public class FluidTileEntity extends TileEntity implements IInteractionObject {

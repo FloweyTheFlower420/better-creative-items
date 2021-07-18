@@ -1,9 +1,5 @@
 package com.floweytf.bettercreativeitems;
 
-import com.floweytf.bettercreativeitems.api.IFluidRenderer;
-import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;

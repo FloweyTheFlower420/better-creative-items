@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PluginRegistry {
-    private Map<String, FluidRenderer> delegate = new HashMap<>();
+    private final Map<String, FluidRenderer> delegate = new HashMap<>();
 
     public <T extends FluidRenderer> void register(ResourceLocation resource, T value) {
         delegate.put(resource.toString(), value);

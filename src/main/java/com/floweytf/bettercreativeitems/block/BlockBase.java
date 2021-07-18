@@ -5,8 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTableList;
 
 import static com.floweytf.bettercreativeitems.Constants.MOD_ID;
 import static com.floweytf.bettercreativeitems.Constants.id;

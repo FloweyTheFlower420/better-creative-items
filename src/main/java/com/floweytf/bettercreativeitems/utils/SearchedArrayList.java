@@ -36,7 +36,7 @@ public class SearchedArrayList<T> extends AbstractList<T> {
     public void setSearchStr(String str) {
         str = str.toLowerCase();
 
-        if(str.contains(this.str) && str.length() != 1) {
+        if (str.contains(this.str) && str.length() != 1) {
             this.str = str;
             // redo search
             List<Integer> other = new ArrayList<>();
