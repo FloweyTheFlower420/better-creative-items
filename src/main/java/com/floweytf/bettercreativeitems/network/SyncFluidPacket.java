@@ -1,9 +1,10 @@
 package com.floweytf.bettercreativeitems.network;
 
+import com.floweytf.bettercreativeitems.Constants;
+import com.floweytf.bettercreativeitems.api.IFluidRenderer;
+import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
-import com.floweytf.bettercreativeitems.utils.FluidRenderer;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -11,8 +12,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import java.nio.charset.StandardCharsets;
 
 // C -> S
 public class SyncFluidPacket implements IMessage {
@@ -38,10 +37,10 @@ public class SyncFluidPacket implements IMessage {
     public SyncFluidPacket() {
     }
 
-    private FluidRenderer fluid;
+    private IFluidRenderer fluid;
     private BlockPos pos;
 
-    public SyncFluidPacket(FluidRenderer fluid, BlockPos pos) {
+    public SyncFluidPacket(IFluidRenderer fluid, BlockPos pos) {
         this.fluid = fluid;
         this.pos = pos;
     }
@@ -49,15 +48,14 @@ public class SyncFluidPacket implements IMessage {
     @Override
     public void toBytes(ByteBuf buf) {
         PacketBuffer buffer = new PacketBuffer(buf);
-        fluid.writeToByteBuf(buffer);
+        buffer.writeResourceLocation(FluidRendererRegistry.get(fluid));
         buffer.writeBlockPos(pos);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         PacketBuffer buffer = new PacketBuffer(buf);
-        fluid = new FluidRenderer();
-        fluid.readFromByteBuf(buffer);
+        fluid = FluidRendererRegistry.get(buffer.readResourceLocation());
         pos = buffer.readBlockPos();
     }
 }

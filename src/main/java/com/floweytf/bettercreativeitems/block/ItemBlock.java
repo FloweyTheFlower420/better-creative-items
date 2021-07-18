@@ -16,7 +16,7 @@ import static com.floweytf.bettercreativeitems.Constants.GUI_ID_ITEM;
 @SuppressWarnings("NullableProblems")
 public class ItemBlock extends BlockBase {
     public ItemBlock() {
-        super(Material.BARRIER, "item");
+        super(Material.IRON, "item");
     }
 
     @Override

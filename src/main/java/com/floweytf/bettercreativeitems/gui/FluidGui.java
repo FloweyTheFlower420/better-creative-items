@@ -1,26 +1,23 @@
 package com.floweytf.bettercreativeitems.gui;
 
+import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
 import com.floweytf.bettercreativeitems.network.SyncFluidPacket;
+import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
-import com.floweytf.bettercreativeitems.utils.FluidRenderer;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import com.floweytf.bettercreativeitems.utils.SearchedArrayList;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.floweytf.bettercreativeitems.Constants.FLUIDS;
 import static com.floweytf.bettercreativeitems.Constants.id;
 
 public class FluidGui extends GuiContainer {
@@ -30,7 +27,7 @@ public class FluidGui extends GuiContainer {
     private boolean isScrolling = false;
     private boolean clearSearch = false;
     private GuiTextField searchBar;
-    private final SearchedArrayList<FluidRenderer> searchedFluids = new SearchedArrayList<>(FLUIDS, FluidRenderer::getName);
+    private final SearchedArrayList<IFluidRenderer> searchedFluids = new SearchedArrayList<>(FluidRendererRegistry.getList(), IFluidRenderer::getName);
 
     public FluidGui(FluidTileEntity te) {
         super(new FluidContainer());
@@ -144,7 +141,7 @@ public class FluidGui extends GuiContainer {
             int index = (slotY + getStartIndex()) * 9 + slotX;
             if (index >= searchedFluids.size()) {
                 // clear slot selected
-                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(new FluidRenderer(), te.getPos()));
+                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(FluidRenderer.EMPTY, te.getPos()));
             }
             else {
                 // set fluid
@@ -154,7 +151,7 @@ public class FluidGui extends GuiContainer {
         else if (8 < mouseX && mouseX < 25 && 111 < mouseY && mouseY < 128) {
             if (!te.getFluidRenderer().isEmpty()) {
                 // clear fluid
-                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(new FluidRenderer(), te.getPos()));
+                PacketHandler.INSTANCE.sendToServer(new SyncFluidPacket(FluidRenderer.EMPTY, te.getPos()));
             }
         }
         else if (174 < mouseX && mouseX < 187 && 17 < mouseY && mouseY < 128) {
@@ -212,12 +209,7 @@ public class FluidGui extends GuiContainer {
 
         if (!this.checkHotbarKeys(keyCode)) {
             if (this.searchBar.textboxKeyTyped(typedChar, keyCode)) {
-                if (typedChar == '\b') {
-                    searchedFluids.setSearchStr(searchBar.getText());
-                }
-                else {
-                    searchedFluids.appendSearchChar(typedChar);
-                }
+                searchedFluids.setSearchStr(this.searchBar.getText());
             }
             else {
                 super.keyTyped(typedChar, keyCode);

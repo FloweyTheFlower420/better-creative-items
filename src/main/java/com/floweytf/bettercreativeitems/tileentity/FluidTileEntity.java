@@ -1,8 +1,10 @@
 package com.floweytf.bettercreativeitems.tileentity;
 
+import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.capabilities.CreativeFluidHandler;
 import com.floweytf.bettercreativeitems.container.FluidContainer;
-import com.floweytf.bettercreativeitems.utils.FluidRenderer;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
+import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.utils.Utils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,8 +19,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import javax.annotation.Nonnull;
@@ -54,13 +54,13 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        cap.fluid.readFrom(compound.getTag(NBT_TAG_NAME));
+        cap.fluidRenderer = FluidRendererRegistry.get(compound.getString(NBT_TAG_NAME));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setTag(NBT_TAG_NAME, cap.fluid.getWriteTag());
+        compound.setString(NBT_TAG_NAME, FluidRendererRegistry.get(cap.fluidRenderer).toString());
         return compound;
     }
 
@@ -90,12 +90,10 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
         return false;
     }
 
-
-
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound tag = super.getUpdateTag();
-        tag.setTag(NBT_TAG_NAME, cap.fluid.getWriteTag());
+        tag.setString(NBT_TAG_NAME, FluidRendererRegistry.get(cap.fluidRenderer).toString());
         return tag;
     }
 
@@ -106,7 +104,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
         if (packet == null) {
             packet = new SPacketUpdateTileEntity(pos, 1, new NBTTagCompound());
         }
-        packet.getNbtCompound().setTag(NBT_TAG_NAME, cap.fluid.getWriteTag());
+        packet.getNbtCompound().setString(NBT_TAG_NAME, FluidRendererRegistry.get(cap.fluidRenderer).toString());
         return packet;
     }
 
@@ -114,21 +112,21 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         super.onDataPacket(net, pkt);
-        cap.fluid.readFrom(pkt.getNbtCompound().getTag(NBT_TAG_NAME));
+        cap.fluidRenderer = FluidRendererRegistry.get(pkt.getNbtCompound().getString(NBT_TAG_NAME));
     }
 
     @Override
     public void handleUpdateTag(NBTTagCompound tag) {
         super.handleUpdateTag(tag);
-        cap.fluid.readFrom(tag.getTag(NBT_TAG_NAME));
+        cap.fluidRenderer = FluidRendererRegistry.get(tag.getString(NBT_TAG_NAME));
     }
 
-    public FluidRenderer getFluidRenderer() {
-        return cap.fluid;
+    public IFluidRenderer getFluidRenderer() {
+        return cap.fluidRenderer;
     }
 
-    public void setFluidRenderer(FluidRenderer renderer) {
-        cap.fluid = renderer;
+    public void setFluidRenderer(IFluidRenderer renderer) {
+        cap.fluidRenderer = renderer;
         IBlockState state = world.getBlockState(pos);
         world.notifyBlockUpdate(getPos(), state, state, 2);
     }

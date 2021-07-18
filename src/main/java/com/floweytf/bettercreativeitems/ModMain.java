@@ -1,21 +1,21 @@
 package com.floweytf.bettercreativeitems;
 
+import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import com.floweytf.bettercreativeitems.gui.GuiHandler;
 import com.floweytf.bettercreativeitems.network.PacketHandler;
+import com.floweytf.bettercreativeitems.plugin.FluidRendererRegistry;
 import com.floweytf.bettercreativeitems.proxy.CommonProxy;
 import com.floweytf.bettercreativeitems.registry.Registry;
 import com.floweytf.bettercreativeitems.tileentity.EnergyTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.FluidTileEntity;
 import com.floweytf.bettercreativeitems.tileentity.ItemTileEntity;
-import com.floweytf.bettercreativeitems.utils.FluidRenderer;
-import com.floweytf.bettercreativeitems.utils.Utils;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -72,9 +72,11 @@ public class ModMain {
 
     private void initFluids() {
         LOG.info("Scanning fluids");
-        FluidRegistry.getRegisteredFluids().forEach((k, v) -> FLUIDS.add(new FluidRenderer(v)));
-        FLUIDS.sort(Comparator.comparing(FluidRenderer::getName));
-        LOG.info("Scanning fluids done, with " + FLUIDS.size() + " fluids found!");
+        FluidRegistry.getRegisteredFluids().forEach((k, v) -> {
+            FluidRendererRegistry.register(id(k),FluidRenderer.getFromFluid(v));
+        });
+        FluidRendererRegistry.sort();
+        LOG.info("Scanning fluids done, with " + FluidRendererRegistry.size() + " fluids found!");
     }
 
     private void initItems() {
@@ -117,12 +119,5 @@ public class ModMain {
         }
 
         LOG.info("Found " + itemCount + " items belonging to no creative tab");
-    }
-
-    @Mod.EventHandler
-    public void interModComms(FMLInterModComms.IMCEvent event) {
-        event.getMessages().stream().forEach(imcMessage -> {
-            String str = imcMessage.getStringValue();
-        });
     }
 }

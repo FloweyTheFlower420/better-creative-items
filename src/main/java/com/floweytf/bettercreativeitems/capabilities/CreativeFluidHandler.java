@@ -1,16 +1,15 @@
 package com.floweytf.bettercreativeitems.capabilities;
 
-import com.floweytf.bettercreativeitems.utils.FluidRenderer;
-import net.minecraftforge.fluids.Fluid;
+import com.floweytf.bettercreativeitems.api.IFluidRenderer;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import scala.Int;
 
 import javax.annotation.Nullable;
 
 public class CreativeFluidHandler implements IFluidHandler {
-    public FluidRenderer fluid = new FluidRenderer();
+    public IFluidRenderer fluidRenderer = FluidRenderer.EMPTY;
 
     @Override
     public IFluidTankProperties[] getTankProperties() {
@@ -19,10 +18,10 @@ public class CreativeFluidHandler implements IFluidHandler {
                 @Nullable
                 @Override
                 public FluidStack getContents() {
-                    if (fluid == null) {
+                    if (fluidRenderer == null) {
                         return null;
                     }
-                    return fluid.getAsStack(Integer.MAX_VALUE);
+                    return fluidRenderer.getAsStack(Integer.MAX_VALUE);
                 }
 
                 @Override
@@ -47,10 +46,10 @@ public class CreativeFluidHandler implements IFluidHandler {
 
                 @Override
                 public boolean canDrainFluidType(FluidStack fluidStack) {
-                    if (fluid == null) {
+                    if (fluidRenderer == null) {
                         return false;
                     }
-                    return fluid.canDrainFluidType(fluidStack);
+                    return fluidRenderer.canDrainFluidType(fluidStack);
                 }
             }
         };
@@ -64,10 +63,10 @@ public class CreativeFluidHandler implements IFluidHandler {
     @Nullable
     @Override
     public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (fluid == null) {
+        if (fluidRenderer == null) {
             return null;
         }
-        if (fluid.canDrainFluidType(resource)) {
+        if (fluidRenderer.canDrainFluidType(resource)) {
             return resource;
         }
         return null;
@@ -76,9 +75,9 @@ public class CreativeFluidHandler implements IFluidHandler {
     @Nullable
     @Override
     public FluidStack drain(int maxDrain, boolean doDrain) {
-        if (fluid == null) {
+        if (fluidRenderer == null) {
             return null;
         }
-        return fluid.getAsStack(maxDrain);
+        return fluidRenderer.getAsStack(maxDrain);
     }
 }

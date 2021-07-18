@@ -46,7 +46,4 @@ public class ItemTileEntity extends TileEntity implements IInteractionObject {
         return false;
     }
 
-    public static String emptyFluid() {
-        return FLUID_ID_EMPTY;
-    }
 }

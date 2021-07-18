@@ -1,13 +1,11 @@
-package com.floweytf.bettercreativeitems.utils;
+package com.floweytf.bettercreativeitems.plugin;
 
-import com.floweytf.bettercreativeitems.Constants;
-import net.minecraft.client.Minecraft;
+import com.floweytf.bettercreativeitems.api.IFluidRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fluids.Fluid;
@@ -18,17 +16,22 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.floweytf.bettercreativeitems.Constants.FLUID_ID_EMPTY;
 
-public class FluidRenderer {
+public class FluidRenderer implements IFluidRenderer {
     @Nullable
     protected Fluid fluid = null;
 
-    public FluidRenderer() {
+    private FluidRenderer() {}
 
-    }
-
-    public FluidRenderer(@NotNull Fluid fluid) {
+    private FluidRenderer(@NotNull Fluid fluid) {
         this.fluid = fluid;
     }
+
+    public static FluidRenderer getFromFluid(Fluid fluid) {
+        return new FluidRenderer(fluid);
+    }
+
+    public static final FluidRenderer EMPTY = new FluidRenderer();
+
 
     public String getName() {
         return fluid.getLocalizedName(new FluidStack(fluid, 1));
@@ -37,7 +40,8 @@ public class FluidRenderer {
     public void draw(int x, int y, GuiContainer container) {
         container.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         TextureAtlasSprite sprite = container.mc.getTextureMapBlocks().getAtlasSprite(fluid.getStill().toString());
-        GlStateManager.color(1.0F, 1.0F, 1.0F);
+        int rgb = 0xff000000 | fluid.getColor();
+        GlStateManager.color(((rgb >> 16) & 0xFF) / 255F, ((rgb >> 8) & 0xFF) / 255F, ((rgb >> 0) & 0xFF) / 255F, 1);
         container.drawTexturedModalRect(x + 1, y + 1, sprite, 16, 16);
     }
 
@@ -46,28 +50,12 @@ public class FluidRenderer {
     }
 
     public FluidStack getAsStack(int amount) {
+        if(fluid == null)
+            return null;
         return new FluidStack(fluid, amount);
     }
 
     public boolean canDrainFluidType(FluidStack other) {
         return other.getFluid() == fluid;
-    }
-
-    public NBTBase getWriteTag() {
-        if(fluid == null)
-            return new NBTTagString(FLUID_ID_EMPTY);
-        return new NBTTagString(FluidRegistry.getFluidName(fluid));
-    }
-
-    public void readFrom(NBTBase tag) {
-        this.fluid = FluidRegistry.getFluid(tag.toString());
-    }
-
-    public void writeToByteBuf(PacketBuffer buffer) {
-        buffer.writeString(FluidRegistry.getFluidName(fluid));
-    }
-
-    public void readFromByteBuf(PacketBuffer buffer) {
-        fluid = FluidRegistry.getFluid(buffer.readString(65535));
     }
 }

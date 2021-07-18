@@ -1,6 +1,6 @@
 package com.floweytf.bettercreativeitems.registry;
 
-import com.floweytf.bettercreativeitems.utils.FluidRenderer;
+import com.floweytf.bettercreativeitems.plugin.FluidRenderer;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;

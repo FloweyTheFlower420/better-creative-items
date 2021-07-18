@@ -8,10 +8,10 @@ import java.util.function.Function;
 public class SearchedArrayList<T> extends AbstractList<T> {
     private String str;
     private List<Integer> locations = new ArrayList<>();
-    private final ArrayList<T> source;
+    private final List<T> source;
     private final Function<T, String> searcher;
 
-    public SearchedArrayList(ArrayList<T> source, Function<T, String> searcher) {
+    public SearchedArrayList(List<T> source, Function<T, String> searcher) {
         this.source = source;
         this.searcher = searcher;
         this.str = "";
@@ -34,8 +34,23 @@ public class SearchedArrayList<T> extends AbstractList<T> {
     }
 
     public void setSearchStr(String str) {
-        this.str = str;
         str = str.toLowerCase();
+
+        if(str.contains(this.str) && str.length() != 1) {
+            this.str = str;
+            // redo search
+            List<Integer> other = new ArrayList<>();
+            for (Integer location : locations) {
+                String name = searcher.apply(source.get(location)).toLowerCase();
+                if (name.contains(str)) {
+                    other.add(location);
+                }
+            }
+            locations = other;
+        }
+
+        this.str = str;
+
         locations.clear();
         for (int i = 0; i < source.size(); i++) {
             String name = searcher.apply(source.get(i)).toLowerCase();

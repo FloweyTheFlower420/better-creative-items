@@ -16,7 +16,7 @@ import static com.floweytf.bettercreativeitems.Constants.GUI_ID_FLUID;
 @SuppressWarnings("NullableProblems")
 public class FluidBlock extends BlockBase {
     public FluidBlock() {
-        super(Material.BARRIER, "fluid");
+        super(Material.IRON, "fluid");
     }
 
     @Override

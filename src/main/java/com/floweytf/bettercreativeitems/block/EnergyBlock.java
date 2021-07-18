@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 @SuppressWarnings("NullableProblems")
 public class EnergyBlock extends BlockBase {
     public EnergyBlock() {
-        super(Material.BARRIER, "energy");
+        super(Material.IRON, "energy");
     }
 
     @Override

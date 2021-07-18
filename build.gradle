@@ -20,63 +20,59 @@ apply plugin: 'maven-publish'
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = '1.1.2'
+version = '1.2'
 group = 'com.floweytf.bettercreativeitems' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'bettercreativeitems'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    //mappings channel: 'snapshot', version: '20171003-1.12'
     mappings channel: 'snapshot', version: '20171003-1.12'
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
-    
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
             workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
         }
-
         server {
-
-            // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
-            // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
         }
     }
     accessTransformer = file('src/main/resources/META-INF/better_creative_items_at.cfg')
 }
 
-dependencies {
-    implementation 'org.jetbrains:annotations:20.1.0'
-    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
-}
-
 sourceSets {
+    api {
+        java {
+            srcDirs = ["src/api/java"]
+        }
+    }
     main {
         output.resourcesDir = file('build/combined')
         java.outputDir = file('build/combined')
     }
 }
 
+dependencies {
+    implementation sourceSets.api.output
+    implementation 'org.jetbrains:annotations:20.1.0'
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
+}
+
+configurations {
+    apiCompile.extendsFrom(compile)
+}
+
+sourceSets.main.java.srcDir file("src/api/java")
+
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
+    from sourceSets.main.output.classesDirs
+    from sourceSets.api.output.classesDirs
+    from sourceSets.main.output.resourcesDir
+    from sourceSets.api.output.resourcesDir
+
     manifest {
         attributes([
             "Specification-Title": "better-creative-items",
@@ -91,21 +87,50 @@ jar {
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar') 
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-//publish.dependsOn('reobfJar')
+jar.finalizedBy('reobfJar')
+
+task apiJar(type: Jar) {
+    group = 'build'
+    classifier = 'api'
+    from sourceSets.api.output
+    from sourceSets.main.allJava
+}
+
+Properties props = new Properties()
+def propFile = file('login.properties')
+def un = ""
+def pwd = ""
+if (propFile.canRead()){
+    props.load(new FileInputStream(propFile))
+
+    if (props!=null && props.containsKey('password') && props.containsKey('username')) {
+        un = props['username']
+        pwd = props['password']
+    }
+}
+
+System.out.println("Running with " + un+ ", password: " + pwd);
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifact jar
+        myLibrary(MavenPublication) {
+            version = '1.0'
+            artifactId = 'api'
+            from components.java
+            artifact apiJar
         }
     }
+
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            url = 'http://maven.floweytf.com/releases/'
+            credentials {
+                username = un
+                password = pwd
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
         }
     }
 }

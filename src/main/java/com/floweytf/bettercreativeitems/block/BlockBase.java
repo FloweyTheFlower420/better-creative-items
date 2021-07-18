@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
 
 import static com.floweytf.bettercreativeitems.Constants.MOD_ID;
 import static com.floweytf.bettercreativeitems.Constants.id;
@@ -17,6 +19,8 @@ public class BlockBase extends Block {
         super(materialIn);
         setRegistryName(id(id));
         setUnlocalizedName(MOD_ID + "." + id);
+        setResistance(100000000); // blow me up bitch. i dare you
+        setHardness(1f);
         setCreativeTab(CreativeTabs.MISC);
         ModMain.proxy.registerModel(Item.getItemFromBlock(this), 0);
     }
