@@ -19,10 +19,10 @@ public class Constants {
 
     public static final String NBT_TAG_NAME = "fluidRendererData";
     public static final ResourceLocation FLUID_ID_EMPTY = id("empty");
-    public static final InventoryBasic basicInventory = new InventoryBasic("tmp", true, 45);
+    public static final InventoryBasic TMP_INVENTORY = new InventoryBasic("tmp", true, 45);
 
     public static CreativeTabs[] CREATIVE_TABS;
-    public static CreativeTabs TAB;
+    public static CreativeTabs INACCESSIBLE_ITEMS_TAB;
 
     public static ResourceLocation id(String name) {
         return new ResourceLocation(MOD_ID, name);

@@ -97,7 +97,7 @@ public class ItemGui extends GuiContainer {
                     CreativeInventoryPacket.sendPacket(j, ItemStack.EMPTY);
                 }
             }
-            else if (type != ClickType.QUICK_CRAFT && slotIn.inventory == basicInventory) {
+            else if (type != ClickType.QUICK_CRAFT && slotIn.inventory == TMP_INVENTORY) {
                 InventoryPlayer playerInventory = this.mc.player.inventory;
                 ItemStack itemstack5 = playerInventory.getItemStack();
                 ItemStack itemstack7 = slotIn.getStack();
@@ -200,7 +200,7 @@ public class ItemGui extends GuiContainer {
         this.searchField.setEnableBackgroundDrawing(false);
         this.searchField.setVisible(false);
         this.searchField.setTextColor(16777215);
-        int i = TAB.getTabIndex();
+        int i = INACCESSIBLE_ITEMS_TAB.getTabIndex();
         selectedTabIndex = -1;
         this.setCurrentCreativeTab(CREATIVE_TABS[i]);
         this.listener = new CreativeCrafting(this.mc);
@@ -370,7 +370,7 @@ public class ItemGui extends GuiContainer {
                 }
             }
         }
-        else if (tab == TAB) {
+        else if (tab == INACCESSIBLE_ITEMS_TAB) {
             for (Item item : ITEMS) {
                 container.itemList.add(new ItemStack(item));
             }
@@ -525,7 +525,7 @@ public class ItemGui extends GuiContainer {
         RenderHelper.enableGUIStandardItemLighting();
         CreativeTabs creativetabs = CREATIVE_TABS[selectedTabIndex];
         if (stupidWorkaround) {
-            setCurrentCreativeTab(CREATIVE_TABS[TAB.getTabIndex()]);
+            setCurrentCreativeTab(CREATIVE_TABS[INACCESSIBLE_ITEMS_TAB.getTabIndex()]);
             stupidWorkaround = false;
         }
 

@@ -44,5 +44,4 @@ public class ItemTileEntity extends TileEntity implements IInteractionObject {
     public boolean hasCustomName() {
         return false;
     }
-
 }

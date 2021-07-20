@@ -18,7 +18,7 @@ public class ItemContainer extends Container {
 
         for (int i = 0; i < 5; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlotToContainer(new LockedSlot(Constants.basicInventory, i * 9 + j, 9 + j * 18, 18 + i * 18));
+                this.addSlotToContainer(new LockedSlot(Constants.TMP_INVENTORY, i * 9 + j, 9 + j * 18, 18 + i * 18));
             }
         }
 
@@ -46,10 +46,10 @@ public class ItemContainer extends Container {
                 int i1 = l + (k + j) * 9;
 
                 if (i1 >= 0 && i1 < this.itemList.size()) {
-                    Constants.basicInventory.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
+                    Constants.TMP_INVENTORY.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
                 }
                 else {
-                    Constants.basicInventory.setInventorySlotContents(l + k * 9, ItemStack.EMPTY);
+                    Constants.TMP_INVENTORY.setInventorySlotContents(l + k * 9, ItemStack.EMPTY);
                 }
             }
         }

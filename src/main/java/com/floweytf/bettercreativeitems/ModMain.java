@@ -83,7 +83,7 @@ public class ModMain {
         // copy over MC tabs, skipping inventory tab, and replacing w/ my mod tag
         for (int i = 0; i < CreativeTabs.CREATIVE_TAB_ARRAY.length; i++) {
             if (CreativeTabs.CREATIVE_TAB_ARRAY[i] == CreativeTabs.INVENTORY) {
-                TAB = CREATIVE_TABS[i] = new CreativeTabs(i, "inaccessible") {
+                INACCESSIBLE_ITEMS_TAB = CREATIVE_TABS[i] = new CreativeTabs(i, "inaccessible") {
                     @Override
                     public ItemStack getTabIconItem() {
                         return new ItemStack(Registry.BARRIER, 1);
