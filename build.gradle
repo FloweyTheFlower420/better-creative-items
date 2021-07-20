@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://sizableshrimp.me/maven' }
         jcenter()
         mavenCentral()
     }
@@ -10,17 +9,13 @@ buildscript {
     }
 }
 
-/*plugins {
-    id "wtf.gofancy.fancygradle" version "1.0.1"
-}*/
-
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
-version = '1.2'
+version = '1.2.1'
 group = 'com.floweytf.bettercreativeitems' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'bettercreativeitems'
 

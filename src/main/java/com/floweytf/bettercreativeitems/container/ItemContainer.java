@@ -1,7 +1,6 @@
 package com.floweytf.bettercreativeitems.container;
 
-import com.floweytf.bettercreativeitems.gui.ItemGui;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import com.floweytf.bettercreativeitems.Constants;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -19,7 +18,7 @@ public class ItemContainer extends Container {
 
         for (int i = 0; i < 5; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlotToContainer(new GuiContainerCreative.LockedSlot(ItemGui.basicInventory, i * 9 + j, 9 + j * 18, 18 + i * 18));
+                this.addSlotToContainer(new LockedSlot(Constants.basicInventory, i * 9 + j, 9 + j * 18, 18 + i * 18));
             }
         }
 
@@ -47,10 +46,10 @@ public class ItemContainer extends Container {
                 int i1 = l + (k + j) * 9;
 
                 if (i1 >= 0 && i1 < this.itemList.size()) {
-                    ItemGui.basicInventory.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
+                    Constants.basicInventory.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
                 }
                 else {
-                    ItemGui.basicInventory.setInventorySlotContents(l + k * 9, ItemStack.EMPTY);
+                    Constants.basicInventory.setInventorySlotContents(l + k * 9, ItemStack.EMPTY);
                 }
             }
         }

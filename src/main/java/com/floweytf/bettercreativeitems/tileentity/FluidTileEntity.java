@@ -104,7 +104,7 @@ public class FluidTileEntity extends TileEntity implements IInteractionObject {
         if (packet == null) {
             packet = new SPacketUpdateTileEntity(pos, 1, new NBTTagCompound());
         }
-        packet.getNbtCompound().setString(NBT_TAG_NAME, FluidRendererRegistry.get(cap.fluidRenderer).toString());
+        packet.nbt.setString(NBT_TAG_NAME, FluidRendererRegistry.get(cap.fluidRenderer).toString());
         return packet;
     }
 
